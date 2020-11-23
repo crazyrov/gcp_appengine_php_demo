@@ -1,0 +1,34 @@
+runtime: php73
+
+service: appenginedemo
+
+instance_class: F1
+
+automatic_scaling:
+  max_instances: 1
+  min_instances: 0
+
+
+handlers:
+
+  - url: /css
+    static_dir: css
+    secure: always
+    redirect_http_response_code: 301
+
+  # Serve images as static resources.
+  - url: /img/(.+\.(gif|png|jpg))$
+    static_files: img/\1
+    upload: img/.*\.(gif|png|jpg)$
+
+  # This automatically redirects to the front controller in index.php
+  - url: .*
+    script: auto
+    secure: always
+    redirect_http_response_code: 301
+
+
+# [START gae_php_mysql_env]
+env_variables:
+  GOOGLE_APPLICATION_CREDENTIALS: permit_me.json
+  GOOGLE_CLOUD_PROJECT: your_project
